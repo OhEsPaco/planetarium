@@ -15,7 +15,7 @@
     var simulation_speed = 1;   
     var min_simulation_speed = -20;
     var max_simulation_speed = +20;
-    
+    var control_speed=20;
     // PLANETS =========================================================
     var sun, earth, moon;
 
@@ -48,7 +48,9 @@
     function init(){
       camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 2000);
       camera.position.z = 700;
-        
+      camera.position.x = 10000;
+      camera.position.y = 10000;
+
       scene = new THREE.Scene();
 
       sun = {
@@ -58,7 +60,9 @@
         angle:0, 
         mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(90, 1), new THREE.MeshBasicMaterial({ color: 0xffde00 , wireframe:true}))
       };
-
+      
+      sun.mesh.position.x=camera.position.x;
+      sun.mesh.position.y=camera.position.y;
       earth = {
         orbit_radius: 300, 
         translation_speed: 0.01,
@@ -116,6 +120,40 @@
             simulation_speed=max_simulation_speed;
           }
         break;
+
+        case "w":
+          camera.position.y+=control_speed;
+        break;
+
+        case "s":
+          camera.position.y-=control_speed;
+        break;
+
+        case "a":
+          camera.position.x-=control_speed;
+        break;
+
+        case "d":
+          camera.position.x+=control_speed;
+        break;
+
+        case "q":
+          camera.position.z+=control_speed;
+          if(camera.position.z>2000){
+            camera.position.z=2000;
+          }
+        break;
+        
+        case "e":
+          camera.position.z-=control_speed;
+
+          if(camera.position.z<0){
+            camera.position.z=0;
+          }
+        break;
+
+
+        
     
         default:
           return; // Quit when this doesn't handle the key event.
