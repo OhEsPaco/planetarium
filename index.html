@@ -1,0 +1,132 @@
+<html>
+<head>
+  <style>
+    html, body { width: 100%; height: 100%; background: #000; color: #fff; }
+    body { margin: 0; overflow: hidden; }
+    canvas { width: 100%; height: 100%; }
+  </style>
+</head>
+<body>
+<script src='js/three.min.js'></script>
+
+<script>
+
+    // CONSTANTS =========================================================
+    var simulation_speed = 1;   
+    var min_simulation_speed = -20;
+    var max_simulation_speed = +20;
+    
+    // PLANETS =========================================================
+    var sun, earth, moon;
+
+    // CAMERA, SCENE, RENDERER... ========================================
+    var camera, scene, renderer;
+
+    init();
+    animation();
+    
+
+    function translation(orbitado, orbitante){
+        
+        var x=orbitado.mesh.position.x + orbitante.orbit_radius * Math.sin(orbitante.angle);
+        var y=orbitado.mesh.position.y + orbitante.orbit_radius * Math.cos(orbitante.angle);
+
+        orbitante.mesh.position.x=x;
+        orbitante.mesh.position.y=y;
+
+        orbitante.angle+=simulation_speed*orbitante.translation_speed;
+        
+    }
+
+    function rotation(orbitante){
+      orbitante.mesh.rotation.z += simulation_speed*orbitante.rotation_speed;
+      orbitante.mesh.rotation.x += simulation_speed*orbitante.rotation_speed*0.1;
+
+    }
+
+
+    function init(){
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 2000);
+      camera.position.z = 700;
+        
+      scene = new THREE.Scene();
+
+      sun = {
+        orbit_radius: 0, 
+        translation_speed: 0, 
+        rotation_speed: 0.001,
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(90, 1), new THREE.MeshBasicMaterial({ color: 0xffde00 , wireframe:true}))
+      };
+
+      earth = {
+        orbit_radius: 300, 
+        translation_speed: 0.01,
+        rotation_speed: 0.01, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(40, 1), new THREE.MeshBasicMaterial({ color: 0x5383d1 , wireframe:true}))
+      };
+
+      moon = {
+        orbit_radius: 100, 
+        translation_speed: 0.05, 
+        rotation_speed: 0.05,
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(20, 1), new THREE.MeshBasicMaterial({ color: 0xbb40d1 , wireframe:true}))
+      };
+
+      scene.add(sun.mesh);
+      scene.add(earth.mesh);
+      scene.add(moon.mesh);
+
+      renderer = new THREE.WebGLRenderer({antialias:true});
+      renderer.setSize( window.innerWidth, window.innerHeight );
+      document.body.appendChild(renderer.domElement) ;
+    }  
+
+    function animation(){
+      window.requestAnimationFrame(animation);
+      
+
+      translation(sun, earth);
+      translation(earth, moon);
+
+      rotation(sun);
+      rotation(earth);
+      rotation(moon);
+        
+      renderer.render(scene, camera);  
+    }   
+
+    document.addEventListener("keydown", function (event) {
+      if (event.defaultPrevented) {
+        return; // Do nothing if the event was already processed
+      }
+      switch (event.key) {
+        case "ArrowDown":
+          simulation_speed--;
+          if(simulation_speed<min_simulation_speed){
+            simulation_speed=min_simulation_speed;
+          }
+        break;
+        
+        case "ArrowUp":
+          simulation_speed++;
+          if(simulation_speed>max_simulation_speed){
+            simulation_speed=max_simulation_speed;
+          }
+        break;
+    
+        default:
+          return; // Quit when this doesn't handle the key event.
+        }
+
+        // Cancel the default action to avoid it being handled twice
+        event.preventDefault();
+      }, true);
+      // the last option dispatches the event to the listener first,
+      // then dispatches event to window
+   
+</script>
+</body>
+</html>
