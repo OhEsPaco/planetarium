@@ -10,14 +10,14 @@
 <script src='js/three.min.js'></script>
 
 <script>
-    //Commit de prueba
     // CONSTANTS =========================================================
     var simulation_speed = 1;   
     var min_simulation_speed = -20;
     var max_simulation_speed = +20;
     var control_speed=20;
     // PLANETS =========================================================
-    var sun, earth, moon;
+    var sun, mercury, venus, earth, mars;
+    var moon, phobos, deimos;
 
     // CAMERA, SCENE, RENDERER... ========================================
     var camera, scene, renderer;
@@ -46,42 +46,95 @@
 
 
     function init(){
-      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 2000);
-      camera.position.z = 700;
-      camera.position.x = 10000;
-      camera.position.y = 10000;
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 4000);
+      camera.position.z = 3500;
+      camera.position.x = 0;
+      camera.position.y = 0;
 
       scene = new THREE.Scene();
-
+      
+      //Sun
       sun = {
         orbit_radius: 0, 
         translation_speed: 0, 
         rotation_speed: 0.001,
         angle:0, 
-        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(90, 1), new THREE.MeshBasicMaterial({ color: 0xffde00 , wireframe:true}))
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(160, 1), new THREE.MeshBasicMaterial({ color: 0xffde00 , wireframe:true}))
       };
+
+      scene.add(sun.mesh);
       
-      sun.mesh.position.x=camera.position.x;
-      sun.mesh.position.y=camera.position.y;
-      earth = {
-        orbit_radius: 300, 
-        translation_speed: 0.01,
-        rotation_speed: 0.01, 
+      //Mercury
+      mercury = {
+        orbit_radius: 698, 
+        translation_speed: 0.04892,
+        rotation_speed: 0.02, 
         angle:0, 
-        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(40, 1), new THREE.MeshBasicMaterial({ color: 0x5383d1 , wireframe:true}))
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(48, 1), new THREE.MeshBasicMaterial({ color: 0xA9A9A9 , wireframe:true}))
+      };
+      scene.add(mercury.mesh);
+
+      //Venus
+      venus = {
+        orbit_radius: 1089, 
+        translation_speed: 0.03502,
+        rotation_speed: -0.015, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(121, 1), new THREE.MeshBasicMaterial({ color: 0x7A5230 , wireframe:true}))
+      };
+
+      scene.add(venus.mesh);
+
+      //Earth
+      earth = {
+        orbit_radius: 1520, 
+        translation_speed: 0.02978,
+        rotation_speed: 0.09, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(127, 1), new THREE.MeshBasicMaterial({ color: 0x5383d1 , wireframe:true}))
       };
 
       moon = {
-        orbit_radius: 100, 
+        orbit_radius: 200, 
         translation_speed: 0.05, 
         rotation_speed: 0.05,
         angle:0, 
         mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(20, 1), new THREE.MeshBasicMaterial({ color: 0xbb40d1 , wireframe:true}))
       };
 
-      scene.add(sun.mesh);
       scene.add(earth.mesh);
       scene.add(moon.mesh);
+
+      //Mars
+
+      mars = {
+        orbit_radius: 2492, 
+        translation_speed: 0.02407,
+        rotation_speed: 0.08, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(67, 1), new THREE.MeshBasicMaterial({ color: 0xCC0000 , wireframe:true}))
+      };
+
+      phobos = {
+        orbit_radius: 120, 
+        translation_speed: 0.07,
+        rotation_speed: 0.01, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(15, 1), new THREE.MeshBasicMaterial({ color: 0x800080 , wireframe:true}))
+      };
+
+      deimos = {
+        orbit_radius: 150, 
+        translation_speed: 0.04,
+        rotation_speed: 0.01, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(10, 1), new THREE.MeshBasicMaterial({ color: 0x008000 , wireframe:true}))
+      };
+
+      scene.add(mars.mesh);
+      scene.add(phobos.mesh);
+      scene.add(deimos.mesh);
+
 
       renderer = new THREE.WebGLRenderer({antialias:true});
       renderer.setSize( window.innerWidth, window.innerHeight );
@@ -91,13 +144,24 @@
     function animation(){
       window.requestAnimationFrame(animation);
       
-
+      translation(sun, mercury);
+      translation(sun, venus);
       translation(sun, earth);
+      translation(sun, mars);
+
       translation(earth, moon);
+
+      translation(mars, phobos);
+      translation(mars, deimos);
 
       rotation(sun);
       rotation(earth);
       rotation(moon);
+      rotation(mercury);
+      rotation(venus);
+      rotation(mars);
+      rotation(phobos);
+      rotation(deimos);
         
       renderer.render(scene, camera);  
     }   
@@ -108,14 +172,14 @@
       }
       switch (event.key) {
         case "ArrowDown":
-          simulation_speed--;
+          simulation_speed=simulation_speed-0.3;
           if(simulation_speed<min_simulation_speed){
             simulation_speed=min_simulation_speed;
           }
         break;
         
         case "ArrowUp":
-          simulation_speed++;
+        simulation_speed=simulation_speed+0.3;
           if(simulation_speed>max_simulation_speed){
             simulation_speed=max_simulation_speed;
           }
@@ -139,8 +203,8 @@
 
         case "q":
           camera.position.z+=control_speed;
-          if(camera.position.z>2000){
-            camera.position.z=2000;
+          if(camera.position.z>4000){
+            camera.position.z=4000;
           }
         break;
         
