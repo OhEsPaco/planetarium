@@ -12,6 +12,7 @@
 <script>
     // CONSTANTS =========================================================
     var simulation_speed = 1;   
+    var last_simulation_speed=1;
     var min_simulation_speed = -20;
     var max_simulation_speed = +20;
     var control_speed=20;
@@ -19,6 +20,7 @@
     var sun, mercury, venus, earth, mars;
     var moon, phobos, deimos;
 
+    var stars;
     // CAMERA, SCENE, RENDERER... ========================================
     var camera, scene, renderer;
 
@@ -44,6 +46,12 @@
 
     }
 
+    function updateStar(star){
+        star.mesh.position.x+=star.movement_speed * Math.cos(star.angle) * simulation_speed;
+        star.mesh.position.y+=star.movement_speed * Math.sin(star.angle) * simulation_speed;
+    }
+
+
 
     function init(){
       camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 4000);
@@ -52,7 +60,14 @@
       camera.position.y = 0;
 
       scene = new THREE.Scene();
-      
+      star={
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(5, 1), new THREE.MeshBasicMaterial({ color: 0xA9A9A9 , wireframe:true})),
+        movement_speed: 30,
+        angle:1,
+        
+      };
+      star.mesh.position.z=-300;
+      //scene.add(star.mesh);
       //Sun
       sun = {
         orbit_radius: 0, 
@@ -143,7 +158,7 @@
 
     function animation(){
       window.requestAnimationFrame(animation);
-      
+     // updateStar(star);
       translation(sun, mercury);
       translation(sun, venus);
       translation(sun, earth);
@@ -187,35 +202,47 @@
 
         case "w":
           camera.position.y+=control_speed;
+         
         break;
 
         case "s":
           camera.position.y-=control_speed;
+          
         break;
 
         case "a":
           camera.position.x-=control_speed;
+        
         break;
 
         case "d":
           camera.position.x+=control_speed;
+       
         break;
 
         case "q":
           camera.position.z+=control_speed;
-          if(camera.position.z>4000){
-            camera.position.z=4000;
+          if(camera.position.z>3950){
+            camera.position.z=3950;
           }
         break;
         
         case "e":
           camera.position.z-=control_speed;
 
-          if(camera.position.z<0){
-            camera.position.z=0;
+          if(camera.position.z<200){
+            camera.position.z=200;
           }
         break;
-
+        case "z":
+        if(simulation_speed==0){
+          simulation_speed=last_simulation_speed;
+        }else{
+          last_simulation_speed=simulation_speed;
+          simulation_speed=0;
+        }
+        
+        break;
 
         
     
@@ -228,7 +255,8 @@
       }, true);
       // the last option dispatches the event to the listener first,
       // then dispatches event to window
-   
+  
+
 </script>
 </body>
 </html>
