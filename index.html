@@ -17,8 +17,9 @@
     var max_simulation_speed = +20;
     var control_speed=20;
     // PLANETS =========================================================
-    var sun, mercury, venus, earth, mars;
-    var moon, phobos, deimos;
+   var sun, mercury, venus, earth, mars, jupiter, saturno, urano, neptuno;
+    var moon, phobos, deimos, io, europa, ganimedes, calisto, titan, tetis, dione, rea, japeto, mimas, encelado,
+    miranda, ariel, umbriel, titania, oberon, triton;
 
     var stars;
     // CAMERA, SCENE, RENDERER... ========================================
@@ -28,22 +29,19 @@
     animation();
     
 
-    function translation(orbitado, orbitante){
-        
+    function translation(orbitado, orbitante){        
         var x=orbitado.mesh.position.x + orbitante.orbit_radius * Math.sin(orbitante.angle);
         var y=orbitado.mesh.position.y + orbitante.orbit_radius * Math.cos(orbitante.angle);
 
         orbitante.mesh.position.x=x;
         orbitante.mesh.position.y=y;
 
-        orbitante.angle+=simulation_speed*orbitante.translation_speed;
-        
+        orbitante.angle+=simulation_speed*orbitante.translation_speed;        
     }
 
     function rotation(orbitante){
       orbitante.mesh.rotation.z += simulation_speed*orbitante.rotation_speed;
       orbitante.mesh.rotation.x += simulation_speed*orbitante.rotation_speed*0.1;
-
     }
 
     function updateStar(star){
@@ -54,36 +52,43 @@
 
 
     function init(){
-      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 4000);
-      camera.position.z = 3500;
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 55000);
+      camera.position.z = 55000;
       camera.position.x = 0;
       camera.position.y = 0;
 
       scene = new THREE.Scene();
-      star={
+      star = {
         mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(5, 1), new THREE.MeshBasicMaterial({ color: 0xA9A9A9 , wireframe:true})),
-        movement_speed: 30,
+        movement_speed: 10,
         angle:1,
         
       };
+      
       star.mesh.position.z=-300;
-      //scene.add(star.mesh);
+      scene.add(star.mesh);
+      
+      // orbit_radius = afelio con un decimal + 1700(sun)
+      // translation_speed = translation_speed/100
+      // rotation_speed = regla de tres -- Tierra(86160sec) = 0.9
+      
+
       //Sun
       sun = {
         orbit_radius: 0, 
         translation_speed: 0, 
         rotation_speed: 0.001,
         angle:0, 
-        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(160, 1), new THREE.MeshBasicMaterial({ color: 0xffde00 , wireframe:true}))
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(1700, 1), new THREE.MeshBasicMaterial({ color: 0xffde00 , wireframe:true}))
       };
 
       scene.add(sun.mesh);
       
       //Mercury
       mercury = {
-        orbit_radius: 698, 
+        orbit_radius: 2398, 
         translation_speed: 0.04892,
-        rotation_speed: 0.02, 
+        rotation_speed: 0.0015, 
         angle:0, 
         mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(48, 1), new THREE.MeshBasicMaterial({ color: 0xA9A9A9 , wireframe:true}))
       };
@@ -91,7 +96,7 @@
 
       //Venus
       venus = {
-        orbit_radius: 1089, 
+        orbit_radius: 2789, 
         translation_speed: 0.03502,
         rotation_speed: -0.015, 
         angle:0, 
@@ -102,7 +107,7 @@
 
       //Earth
       earth = {
-        orbit_radius: 1520, 
+        orbit_radius: 3220, 
         translation_speed: 0.02978,
         rotation_speed: 0.09, 
         angle:0, 
@@ -118,15 +123,14 @@
       };
 
       scene.add(earth.mesh);
-      scene.add(moon.mesh);
+      scene.add(moon.mesh);      
 
       //Mars
-
       mars = {
-        orbit_radius: 2492, 
+        orbit_radius: 4192, 
         translation_speed: 0.02407,
-        rotation_speed: 0.08, 
-        angle:0, 
+        rotation_speed: 0.087, 
+        angle:1.85, 
         mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(67, 1), new THREE.MeshBasicMaterial({ color: 0xCC0000 , wireframe:true}))
       };
 
@@ -150,6 +154,202 @@
       scene.add(phobos.mesh);
       scene.add(deimos.mesh);
 
+      //Jupiter
+      jupiter = {
+        orbit_radius: 9866, 
+        translation_speed: 0.01305,
+        rotation_speed: 0.219, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(1429, 1), new THREE.MeshBasicMaterial({ color: 0x8A2908 , wireframe:true}))
+      };
+
+      io = {
+        orbit_radius: 1852, 
+        translation_speed: 0.173,
+        rotation_speed: 0.5, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(36, 1), new THREE.MeshBasicMaterial({ color: 0x008000 , wireframe:true}))
+      };
+
+      europa = {
+        orbit_radius: 2105, 
+        translation_speed: 0.137,
+        rotation_speed: 0.25, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(31, 1), new THREE.MeshBasicMaterial({ color: 0x008000 , wireframe:true}))
+      };
+
+      ganimedes = {
+        orbit_radius: 2500, 
+        translation_speed: 0.1,
+        rotation_speed: 0.12, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(52, 1), new THREE.MeshBasicMaterial({ color: 0x008000 , wireframe:true}))
+      };
+
+      calisto = {
+        orbit_radius: 3326, 
+        translation_speed: 0.082,
+        rotation_speed: 0.05, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(48, 1), new THREE.MeshBasicMaterial({ color: 0x008000 , wireframe:true}))
+      };
+
+      scene.add(jupiter.mesh);
+      scene.add(io.mesh);
+      scene.add(europa.mesh);
+      scene.add(ganimedes.mesh);
+      scene.add(calisto.mesh);
+
+      //Saturno
+      saturno = {
+        orbit_radius: 16739, 
+        translation_speed: 0.00964,
+        rotation_speed: 0.200, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(1205, 1), new THREE.MeshBasicMaterial({ color: 0xFF8000 , wireframe:true}))
+      };
+
+      titan = {
+        orbit_radius: 2425, 
+        translation_speed: 0.26,
+        rotation_speed: 0.05, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(51, 1), new THREE.MeshBasicMaterial({ color: 0x008000 , wireframe:true}))
+      };
+
+      tetis = {
+        orbit_radius: 1499, 
+        translation_speed: 0.34,
+        rotation_speed: 0.47, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(10, 1), new THREE.MeshBasicMaterial({ color: 0x008000 , wireframe:true}))
+      };
+
+      dione = {
+        orbit_radius: 1582, 
+        translation_speed: 0.51,
+        rotation_speed: 0.328, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(11, 1), new THREE.MeshBasicMaterial({ color: 0x008000 , wireframe:true}))
+      };
+
+      rea = {
+        orbit_radius: 1732, 
+        translation_speed: 0.63,
+        rotation_speed: 0.19, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(15, 1), new THREE.MeshBasicMaterial({ color: 0x008000 , wireframe:true}))
+      };
+
+      japeto = {
+        orbit_radius: 4765, 
+        translation_speed: 0.572,
+        rotation_speed: 0.011, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(14, 1), new THREE.MeshBasicMaterial({ color: 0x008000 , wireframe:true}))
+      };
+
+      mimas = {
+        orbit_radius: 1390, 
+        translation_speed: 0.159,
+        rotation_speed: 0.95, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(4, 1), new THREE.MeshBasicMaterial({ color: 0x008000 , wireframe:true}))
+      };
+
+      encelado = {
+        orbit_radius: 1442, 
+        translation_speed: 0.239,
+        rotation_speed: 0.655, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(4, 1), new THREE.MeshBasicMaterial({ color: 0x008000 , wireframe:true}))
+      };
+
+      scene.add(saturno.mesh);
+      scene.add(titan.mesh);
+      scene.add(tetis.mesh);
+      scene.add(dione.mesh);
+      scene.add(rea.mesh);
+      scene.add(japeto.mesh);
+      scene.add(mimas.mesh);
+      scene.add(encelado.mesh);
+
+      //Urano
+      urano = {
+        orbit_radius: 31744, 
+        translation_speed: 0.00681,
+        rotation_speed: 0.124, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(511, 1), new THREE.MeshBasicMaterial({ color: 0x01DF01 , wireframe:true}))
+      };
+
+      miranda = {
+        orbit_radius: 129, 
+        translation_speed: 0.19,
+        rotation_speed: 0.63, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(4, 1), new THREE.MeshBasicMaterial({ color: 0x01DF01 , wireframe:true}))
+      };
+
+      ariel = {
+        orbit_radius: 701, 
+        translation_speed: 0.56,
+        rotation_speed: 0.35, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(11, 1), new THREE.MeshBasicMaterial({ color: 0x01DF01 , wireframe:true}))
+      };
+
+      umbriel = {
+        orbit_radius: 777, 
+        translation_speed: 0.52,
+        rotation_speed: 0.216, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(11, 1), new THREE.MeshBasicMaterial({ color: 0x01DF01 , wireframe:true}))
+      };
+
+      titania = {
+        orbit_radius: 947, 
+        translation_speed: 0.77,
+        rotation_speed: 0.1, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(15, 1), new THREE.MeshBasicMaterial({ color: 0x01DF01 , wireframe:true}))
+      };
+
+      oberon = {
+        orbit_radius: 1094, 
+        translation_speed: 0.726,
+        rotation_speed: 0.06, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(15, 1), new THREE.MeshBasicMaterial({ color: 0x01DF01 , wireframe:true}))
+      };
+
+      scene.add(urano.mesh);
+      scene.add(miranda.mesh);
+      scene.add(ariel.mesh);
+      scene.add(umbriel.mesh);
+      scene.add(titania.mesh);
+      scene.add(oberon.mesh);
+
+      //Neptuno
+      neptuno = {
+        orbit_radius: 47239, 
+        translation_speed: 0.00543,
+        rotation_speed: 0.133, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(495  , 1), new THREE.MeshBasicMaterial({ color: 0x0B0B61 , wireframe:true}))
+      };
+
+      triton = {
+        orbit_radius: 865, 
+        translation_speed: 0.015,
+        rotation_speed: -0.015, 
+        angle:0, 
+        mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(27, 1), new THREE.MeshBasicMaterial({ color: 0x008000 , wireframe:true}))
+      };
+
+      scene.add(neptuno.mesh);
+      scene.add(triton.mesh);
 
       renderer = new THREE.WebGLRenderer({antialias:true});
       renderer.setSize( window.innerWidth, window.innerHeight );
@@ -158,16 +358,43 @@
 
     function animation(){
       window.requestAnimationFrame(animation);
-     // updateStar(star);
+      
+      updateStar(star);
+
       translation(sun, mercury);
       translation(sun, venus);
       translation(sun, earth);
       translation(sun, mars);
+      translation(sun, jupiter);
+      translation(sun, saturno);
+      translation(sun, urano);
+      translation(sun, neptuno);
 
       translation(earth, moon);
 
       translation(mars, phobos);
       translation(mars, deimos);
+
+      translation(jupiter, io);
+      translation(jupiter, europa);
+      translation(jupiter, ganimedes);
+      translation(jupiter, calisto);
+
+      translation(saturno, titan);
+      translation(saturno, tetis);
+      translation(saturno, dione);
+      translation(saturno, rea);
+      translation(saturno, japeto);
+      translation(saturno, mimas);
+      translation(saturno, encelado);
+
+      translation(urano, miranda);
+      translation(urano, ariel);
+      translation(urano, umbriel);
+      translation(urano, titania);
+      translation(urano, oberon);
+
+      translation(neptuno, triton);
 
       rotation(sun);
       rotation(earth);
@@ -177,6 +404,27 @@
       rotation(mars);
       rotation(phobos);
       rotation(deimos);
+      rotation(jupiter);
+      rotation(io);
+      rotation(europa);
+      rotation(ganimedes);
+      rotation(calisto);
+      rotation(saturno);
+      rotation(titan);
+      rotation(tetis);
+      rotation(dione);
+      rotation(rea);
+      rotation(japeto);
+      rotation(mimas);
+      rotation(encelado);
+      rotation(urano);
+      rotation(miranda);
+      rotation(ariel);
+      rotation(umbriel);
+      rotation(titania);
+      rotation(oberon);
+      rotation(neptuno);
+      rotation(triton);
         
       renderer.render(scene, camera);  
     }   
@@ -222,8 +470,8 @@
 
         case "q":
           camera.position.z+=control_speed;
-          if(camera.position.z>3950){
-            camera.position.z=3950;
+          if(camera.position.z>50000){
+            camera.position.z=50000;
           }
         break;
         
